@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="stats">
+  <a class="stat" href="{{ url_for('books_list') }}"><b>{{ s.titles }}</b><span>titles, {{ s.copies }} copies</span></a>
+  <a class="stat" href="{{ url_for('returns') }}"><b>{{ s.issued }}</b><span>copies on loan</span></a>
+  <a class="stat ok" href="{{ url_for('books_list') }}"><b>{{ s.available }}</b><span>copies on the shelf</span></a>
+  <a class="stat {{ 'warn' if s.overdue }}" href="{{ url_for('overdue') }}"><b>{{ s.overdue }}</b><span>overdue, {{ s.outstanding|money }} in fines</span></a>
+  <a class="stat" href="{{ url_for('students_list') }}"><b>{{ s.students }}</b><span>registered students</span></a>
+</section>
+<section class="panel">
+  <div class="row-between"><h2>Shelf use</h2><span class="muted">{{ s.pct }}% of copies are out</span></div>
+  <div class="meter" role="img" aria-label="{{ s.pct }} percent of copies on loan"><i style="width: {{ s.pct }}%"></i></div>
+  <div class="actions"><a class="btn primary" href="{{ url_for('issue') }}">Issue a book</a><a class="btn" href="{{ url_for('returns') }}">Return a book</a><a class="btn" href="{{ url_for('student_new') }}">Register student</a><a class="btn" href="{{ url_for('book_new') }}">Add book</a></div>
+</section>
+<div class="two">
+  <section class="panel">
+    <h2>Most overdue</h2>
+    {% if overdue %}
+    <ul class="plain">{% for t in overdue %}
+      <li><b>{{ t.book_title }}</b><br><span class="muted">{{ t.student_name }} · {{ t.days }} day{{ 's' if t.days != 1 }} late · {{ t.fee|money }}</span></li>
+    {% endfor %}</ul>
+    {% else %}<p class="muted">Nothing is overdue today.</p>{% endif %}
+  </section>
+  <section class="panel">
+    <h2>Recent activity</h2>
+    {% if recent %}
+    <ul class="plain">{% for t in recent %}
+      <li><b>{{ t.book_title }}</b> <span class="badge {{ t.state|lower }}">{{ t.state }}</span><br><span class="muted">{{ t.student_name }} · due {{ t.due_on|dfmt }}</span></li>
+    {% endfor %}</ul>
+    {% else %}<p class="muted">No loans yet. Issue the first book to get started.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

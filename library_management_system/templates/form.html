@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel narrow">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for f in fields %}
+    <div class="field {{ 'has-error' if errors.get(f.name) }}">
+      <label for="{{ f.name }}">{{ f.label }}</label>
+      {% if f.type == 'select' %}
+        <select id="{{ f.name }}" name="{{ f.name }}">
+          {% for o in f.options %}<option {{ 'selected' if o == values.get(f.name) }}>{{ o }}</option>{% endfor %}
+        </select>
+      {% else %}
+        <input id="{{ f.name }}" name="{{ f.name }}" type="{{ f.type }}" value="{{ '' if f.type == 'password' else values.get(f.name, '') }}"{% for k, v in f.get('attrs', {}).items() %} {{ k }}="{{ v }}"{% endfor %}>
+      {% endif %}
+      {% if errors.get(f.name) %}<p class="error-text">{{ errors[f.name] }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <div class="actions"><button class="btn primary">{{ submit }}</button><a class="btn" href="{{ cancel }}">Cancel</a></div>
+  </form>
+</section>
+{% endblock %}

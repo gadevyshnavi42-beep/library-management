@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Aarav Sharma",
+    "roll_no": "CS21B001",
+    "email": "aarav.sharma@college.edu",
+    "phone": "9876500001",
+    "department": "Computer Science",
+    "registered_on": "2026-07-16"
+  },
+  {
+    "id": 2,
+    "name": "Meera Nair",
+    "roll_no": "CS21B014",
+    "email": "meera.nair@college.edu",
+    "phone": "9876500002",
+    "department": "Computer Science",
+    "registered_on": "2026-07-16"
+  },
+  {
+    "id": 3,
+    "name": "Rohan Verma",
+    "roll_no": "ME21B022",
+    "email": "rohan.verma@college.edu",
+    "phone": "9876500003",
+    "department": "Mechanical",
+    "registered_on": "2026-07-16"
+  },
+  {
+    "id": 4,
+    "name": "Sneha Iyer",
+    "roll_no": "IT21B009",
+    "email": "sneha.iyer@college.edu",
+    "phone": "9876500004",
+    "department": "Information Technology",
+    "registered_on": "2026-07-16"
+  },
+  {
+    "id": 5,
+    "name": "Karthik Raman",
+    "roll_no": "EC21B031",
+    "email": "karthik.raman@college.edu",
+    "phone": "9876500005",
+    "department": "Electronics",
+    "registered_on": "2026-07-16"
+  },
+  {
+    "id": 6,
+    "name": "Fatima Khan",
+    "roll_no": "BA21B005",
+    "email": "fatima.khan@college.edu",
+    "phone": "9876500006",
+    "department": "Business Administration",
+    "registered_on": "2026-07-16"
+  }
+]

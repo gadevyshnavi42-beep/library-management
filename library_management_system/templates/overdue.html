@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <div class="toolbar"><span>Outstanding fines: <b>{{ total|money }}</b> at {{ fine_rate|money }} per day</span>
+    <a class="btn" href="{{ url_for('export', kind='overdue') }}">Export CSV</a></div>
+  {% if loans %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Book</th><th>Student</th><th class="hide-sm">Phone</th><th>Due</th><th class="num">Days late</th><th class="num">Fine</th></tr></thead>
+    <tbody>{% for t in loans %}
+      <tr><td><b>{{ t.book_title }}</b></td><td>{{ t.student_name }}<br><span class="muted">{{ t.roll_no }}</span></td>
+        <td class="hide-sm">{{ t.phone }}</td><td>{{ t.due_on|dfmt }}</td><td class="num">{{ t.days }}</td><td class="num">{{ t.fee|money }}</td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  <div class="actions"><a class="btn primary" href="{{ url_for('returns') }}">Go to returns</a></div>
+  {% else %}<p class="muted">No overdue books. Nice.</p>{% endif %}
+</section>
+{% endblock %}

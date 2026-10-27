@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+venv/
+data/.secret_key
+data/admins.json
+data/*.corrupt

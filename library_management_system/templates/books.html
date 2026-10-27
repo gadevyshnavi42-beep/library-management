@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <form class="toolbar" method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search title, author or ISBN" data-filter="#tbl" aria-label="Search books">
+    <select name="category" aria-label="Category" onchange="this.form.submit()">
+      <option value="">All categories</option>
+      {% for c in categories %}<option {{ 'selected' if c == cat }}>{{ c }}</option>{% endfor %}
+    </select>
+    <a class="btn primary" href="{{ url_for('book_new') }}">Add book</a>
+    <a class="btn" href="{{ url_for('export', kind='books') }}">Export CSV</a>
+  </form>
+  {% if books %}
+  <div class="table-wrap"><table id="tbl">
+    <thead><tr><th>ID</th><th>Title</th><th class="hide-sm">Author</th><th class="hide-sm">Category</th><th class="num">Available</th><th></th></tr></thead>
+    <tbody>{% for b in books %}
+      <tr><td>{{ b.id|bcode }}</td><td><b>{{ b.title }}</b><br><span class="muted">ISBN {{ b.isbn }}</span></td>
+        <td class="hide-sm">{{ b.author }}</td><td class="hide-sm">{{ b.category }}</td>
+        <td class="num"><span class="badge {{ 'issued' if b.available == 0 else 'returned' }}">{{ b.available }} / {{ b.copies }}</span></td>
+        <td class="row-actions"><a href="{{ url_for('book_edit', book_id=b.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('book_delete', book_id=b.id) }}" data-confirm="Delete “{{ b.title }}”?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="linkish danger">Delete</button></form></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  <p id="noMatch" class="muted" hidden>No books match that search.</p>
+  {% else %}<p class="muted">No books found. <a href="{{ url_for('book_new') }}">Add the first book</a>.</p>{% endif %}
+</section>
+{% endblock %}

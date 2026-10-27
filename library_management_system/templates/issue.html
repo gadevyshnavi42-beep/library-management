@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel narrow">
+  {% if not students or not books %}
+    <p class="muted">You need at least one <a href="{{ url_for('student_new') }}">student</a> and one <a href="{{ url_for('book_new') }}">book</a> before issuing.</p>
+  {% else %}
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="field"><label for="student_id">Student</label>
+      <select id="student_id" name="student_id" required>
+        <option value="">Choose a student</option>
+        {% for s in students %}<option value="{{ s.id }}" {{ 'selected' if s.id == sel.student_id }}>{{ s.name }} ({{ s.roll_no }})</option>{% endfor %}
+      </select></div>
+    <div class="field"><label for="book_id">Book</label>
+      <select id="book_id" name="book_id" required>
+        <option value="">Choose a book</option>
+        {% for b in books %}<option value="{{ b.id }}" data-available="{{ b.available }}" data-total="{{ b.copies }}" data-author="{{ b.author }}" {{ 'disabled' if b.available < 1 }} {{ 'selected' if b.id == sel.book_id }}>{{ b.title }}{{ ' (none available)' if b.available < 1 }}</option>{% endfor %}
+      </select>
+      <p id="bookInfo" class="muted"></p></div>
+    <div class="field"><label for="days">Loan period (days)</label>
+      <input id="days" name="days" type="number" min="1" max="60" value="{{ sel.days or loan_days }}" required>
+      <p class="muted">Due on <b id="dueDate"></b>. Late fee: {{ fine_rate|money }} per day. Limit: {{ max_loans }} books per student.</p></div>
+    <div class="actions"><button class="btn primary">Issue book</button></div>
+  </form>
+  {% endif %}
+</section>
+{% endblock %}

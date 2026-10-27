@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <div class="toolbar"><input type="search" placeholder="Filter by book or student" data-filter="#tbl" aria-label="Filter loans"></div>
+  {% if loans %}
+  <div class="table-wrap"><table id="tbl">
+    <thead><tr><th>Book</th><th>Student</th><th class="hide-sm">Issued</th><th>Due</th><th class="num">Fine now</th><th></th></tr></thead>
+    <tbody>{% for t in loans %}
+      <tr><td><b>{{ t.book_title }}</b></td><td>{{ t.student_name }}<br><span class="muted">{{ t.roll_no }}</span></td>
+        <td class="hide-sm">{{ t.issued_on|dfmt }}</td>
+        <td>{{ t.due_on|dfmt }}{% if t.days %}<br><span class="badge overdue">{{ t.days }} day{{ 's' if t.days != 1 }} late</span>{% endif %}</td>
+        <td class="num">{{ t.fee|money }}</td>
+        <td class="row-actions"><form method="post" action="{{ url_for('return_book', tid=t.id) }}" data-confirm="Return “{{ t.book_title }}”{% if t.fee %} and record a fine of {{ t.fee|money }}{% endif %}?">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn small">Return</button></form></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  <p id="noMatch" class="muted" hidden>No loans match.</p>
+  {% else %}<p class="muted">Every book is on the shelf. Nothing to return.</p>{% endif %}
+</section>
+{% endblock %}

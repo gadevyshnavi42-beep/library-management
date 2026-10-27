@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% macro bars(items, unit) %}
+  {% set top = (items|map(attribute=1)|max) if items else 0 %}
+  {% for label, n in items %}
+  <div class="bar"><span>{{ label }}</span><div><i style="width: {{ (100 * n / top) if top else 0 }}%"></i></div><b>{{ n }}</b></div>
+  {% else %}<p class="muted">No data yet.</p>{% endfor %}
+{% endmacro %}
+{% block content %}
+<section class="stats">
+  <div class="stat"><b>{{ r.total }}</b><span>loans recorded</span></div>
+  <div class="stat"><b>{{ r.active }}</b><span>currently open</span></div>
+  <div class="stat"><b>{{ r.late_returns }}</b><span>returned late</span></div>
+  <div class="stat ok"><b>{{ r.collected|money }}</b><span>fines collected</span></div>
+  <div class="stat {{ 'warn' if r.outstanding }}"><b>{{ r.outstanding|money }}</b><span>fines outstanding</span></div>
+</section>
+<div class="two">
+  <section class="panel"><h2>Loans per month</h2>{{ bars(r.by_month) }}</section>
+  <section class="panel"><h2>Loans by category</h2>{{ bars(r.by_cat) }}</section>
+  <section class="panel"><h2>Most borrowed books</h2>{{ bars(r.top_books) }}</section>
+  <section class="panel"><h2>Most active students</h2>{{ bars(r.top_students) }}</section>
+</div>
+<section class="panel"><h2>Export data</h2>
+  <div class="actions">{% for k in ['books','students','history','overdue'] %}<a class="btn" href="{{ url_for('export', kind=k) }}">{{ k|capitalize }} CSV</a>{% endfor %}</div></section>
+{% endblock %}

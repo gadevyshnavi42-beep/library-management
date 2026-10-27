@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} · Library Desk</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{{ 'app' if session.admin else 'bare' }}">
+{% if session.admin %}
+<aside id="sidebar" class="side">
+  <a class="brand" href="{{ url_for('dashboard') }}">Library Desk</a>
+  <nav>
+    {% set nav = [('dashboard','Dashboard'),('books_list','Books'),('students_list','Students'),('issue','Issue a book'),('returns','Return books'),('overdue','Overdue'),('history','History'),('reports','Reports'),('account','Account')] %}
+    {% for ep, label in nav %}
+      <a href="{{ url_for(ep) }}" class="{{ 'on' if request.endpoint == ep }}">{{ label }}{% if ep == 'overdue' and overdue_count %}<em>{{ overdue_count }}</em>{% endif %}</a>
+    {% endfor %}
+  </nav>
+  <form method="post" action="{{ url_for('logout') }}" class="logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="linkish">Sign out ({{ session.admin }})</button>
+  </form>
+</aside>
+{% endif %}
+<div class="main">
+  {% if session.admin %}
+  <header class="top"><button id="menuBtn" class="icon" aria-label="Open menu">☰</button><h1>{{ title }}</h1></header>
+  {% endif %}
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% if msgs %}<div class="flashes" role="status">
+      {% for cat, m in msgs %}<div class="flash {{ cat }}"><span>{{ m }}</span><button type="button" aria-label="Dismiss">×</button></div>{% endfor %}
+    </div>{% endif %}
+  {% endwith %}
+  <main>{% block content %}{% endblock %}</main>
+</div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
